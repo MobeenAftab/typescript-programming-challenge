@@ -4,6 +4,8 @@ import {
   solveFirstQuestion,
   solveSecondQuestion,
   solveThirdQuestion,
+  datetimeRegexp,
+  extractDates,
 } from "./index";
 
 describe("Input File: input0.txt", () => {
@@ -79,5 +81,22 @@ describe("Input File: input2.txt", () => {
       "2020-01-01T16:45:00.000Z/2020-01-01T17:30:00.000Z",
       "2020-01-01T18:30:00.000Z/2020-01-01T19:15:00.000Z",
     ]);
+  });
+});
+
+describe("test datetime extraction", () => {
+  it("regexp should extract datetime from a worker input", () => {
+    const datetime = "2020-01-01T00:15:00.000Z/2020-01-01T16:00:00.000Z";
+    expect(datetimeRegexp.test(datetime)).toBeTruthy();
+  });
+
+  it("should return an array of dates given a string of interval times", () => {
+    const datetime = "1@[2020-01-01T12:00:00.000Z/2020-01-02T12:00:00.000Z] ";
+    const arr = extractDates(datetime);
+    const expectedArr = [
+      new Date("2020-01-01T12:00:00.000Z"),
+      new Date("2020-01-02T12:00:00.000Z"),
+    ];
+    expect(arr).toStrictEqual(expectedArr);
   });
 });

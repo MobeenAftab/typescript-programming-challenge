@@ -7,7 +7,7 @@ interface Intervals {
 }
 
 // https://stackoverflow.com/questions/3143070/javascript-regex-iso-datetime
-const datetimeRegexp =
+export const datetimeRegexp =
   /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/gm;
 
 export async function solveFirstQuestion(
@@ -25,7 +25,7 @@ export async function solveFirstQuestion(
   for await (const line of rl) {
     let start: Date | null = null;
 
-    const arr = line.match(datetimeRegexp)?.map((x) => new Date(x));
+    const arr = extractDates(line);
 
     // map over arr to find the earliest date first
     start =
@@ -55,7 +55,7 @@ export async function solveSecondQuestion(
   for await (const line of rl) {
     let end: Date | null = null;
 
-    const arr = line.match(datetimeRegexp)?.map((x) => new Date(x));
+    const arr = extractDates(line);
 
     // map over arr to find the latest date first
     end =
@@ -70,10 +70,14 @@ export async function solveSecondQuestion(
   return latest?.toISOString() ?? "";
 }
 
-// Did not understand question
+// Did not understand question requirements
 export async function solveThirdQuestion(
   inputFilePath: string
 ): Promise<string[]> {
   // TODO: Solve me!
   return [];
 }
+
+export const extractDates = (dates: string): Date[] | null => {
+  return dates.match(datetimeRegexp)?.map((x) => new Date(x)) ?? null;
+};
